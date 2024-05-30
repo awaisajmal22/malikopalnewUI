@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "71491343879",
+    "project_id": "malikopal",
+    "storage_bucket": "malikopal.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:71491343879:android:423b93f272a556c61bfca2",
+        "android_client_info": {
+          "package_name": "com.malikopal.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBh4xNsXHQIQQuZ6SaLlLM1UoaM1zeuxMk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
