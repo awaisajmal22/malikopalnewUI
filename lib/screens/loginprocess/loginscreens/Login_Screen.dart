@@ -186,7 +186,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             ),
         icon: Padding(
           padding: EdgeInsets.only(
-              left: isTablet() ? size.width * 0.07.w : size.width * 0.07.w),
+              left: isTablet() ? size.width * 0.02.w : size.width * 0.07.w),
           child: Container(
             height: 22.h,
             width: 22.w,
@@ -237,7 +237,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                 ),
             icon: Padding(
               padding: EdgeInsets.only(
-                  left: isTablet() ? size.width * 0.07.w : size.width * 0.07.w),
+                  left: isTablet() ? size.width * 0.02.w : size.width * 0.07.w),
               child: _passwordtextcontroller.text.length > 8
                   ? SizedBox.shrink()
                   : Container(
@@ -374,6 +374,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                     _bloc.postLoginFormData(data);
                   },
                   child: CustomButton(
+                    
                     title: 'SIGN IN',
                   ),
                 ),

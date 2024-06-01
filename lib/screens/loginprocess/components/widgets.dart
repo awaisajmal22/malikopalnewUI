@@ -1,5 +1,6 @@
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:malikopal/screens/setting/components/setting.widgets.dart';
 
 class CustomButton extends StatefulWidget {
   const CustomButton({
@@ -20,7 +21,7 @@ class _CustomButtonState extends State<CustomButton> {
       child: Column(
         children: [
           Container(
-            height: 65,
+            height: isTablet() ? 90 : 65,
             width: size.width * 0.83.w,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
