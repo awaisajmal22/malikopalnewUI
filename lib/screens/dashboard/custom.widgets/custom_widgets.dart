@@ -17,8 +17,9 @@ import 'package:malikopal/screens/widgets/back_alert.dart';
 import 'package:ionicons/ionicons.dart';
 
 import '../../../ScopedModelWrapper.dart';
+import '../../setting/profile_screen.dart';
 
-enum screen { home, dashboard, setting, logout }
+enum screen { home, dashboard, setting, profile }
 
 var currentScreen = BehaviorSubject<screen>.seeded(screen.home);
 
@@ -192,31 +193,30 @@ class _BottomBarState extends State<AnimatedBottomNavBar> {
             onTap: () {
               print("Log out");
 
-              currentScreen.add(screen.logout);
+              currentScreen.add(screen.profile);
 
-              OnBackToLogout().Logout(
-                  ctx: context,
-                  title: "Confirmation Dialog",
-                  content: "Do You Want to Logout?");
+              Navigator.pushNamed(context, ProfileView.routeName).then((value) {
+                currentScreen.add(screen.home);
+              });
             },
             child: AnimatedCircularButton(
                 color: [
                   Theme.of(context).cardColor,
                   Theme.of(context).cardColor
                 ],
-                textColor: currentScreen.value == screen.logout
+                textColor: currentScreen.value == screen.profile
                     ? null
                     : Color(0xffACBBF3),
                 Icon: Center(
                   child: SvgPicture.asset(
-                    "assets/newassets/setting.svg",
-                    color: currentScreen.value == screen.logout
+                    "assets/svg/user-eye.svg",
+                    color: currentScreen.value == screen.profile
                         ? Color(0xff1164AA)
                         // Color(0xff912C8C)
                         : null,
                   ),
                 ),
-                text: "Logout"),
+                text: "Profile"),
           ),
         ],
       ),
@@ -1277,38 +1277,58 @@ class NewMenuButton extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(2.0),
-            child: Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: bgColor,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(1.0),
-                child: SizedBox(
-                  height: 50,
-                  width: 50,
+          Container(
+            // width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: Color(0xffACBBF3)),
+              // color: bgColor,
+            ),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  // padding: EdgeInsets.all(30),
+                  alignment: Alignment.center,
+                  // height: 100,
+                  // MediaQuery.of(context).size.height.h * 0.14,
+                  // width: 100,
+                  // MediaQuery.of(context).size.width.w * 0.1,
                   child: asssetsName.contains(".png")
                       ? Image.asset(
                           asssetsName,
+                          height: 100.h,
+                          width: 100.h,
                         )
                       : SvgPicture.asset(
                           asssetsName,
                         ),
                 ),
-              ),
+                SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 5),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      color: Color(0xffACBBF3),
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(20),
+                        bottomRight: Radius.circular(20),
+                      )),
+                  child: Text(
+                    text,
+                    style: TextStyle(
+                        fontSize: isTablet() ? 8.sp : 12,
+                        fontWeight: FontWeight.w500),
+                    textAlign: TextAlign.center,
+                  ),
+                )
+              ],
             ),
           ),
-          SizedBox(
-            height: 5,
-          ),
-          Text(
-            text,
-            style: TextStyle(
-                fontSize: isTablet() ? 8.sp : 12, fontWeight: FontWeight.w500),
-            textAlign: TextAlign.center,
-          )
         ],
       ),
     );
@@ -1383,10 +1403,12 @@ class _AnimatedCircularButtonState extends State<AnimatedCircularButton> {
 
 //Animated title tile
 class AnimatedTitle extends StatefulWidget {
-  AnimatedTitle({this.trailing, Key? key, this.data}) : super(key: key);
+  AnimatedTitle({this.trailing, Key? key, this.data, required this.onTap})
+      : super(key: key);
 
   final Widget? trailing;
   final DashboardResponseDataModel? data;
+  final VoidCallback onTap;
   @override
   State<AnimatedTitle> createState() => _AnimatedTitleState();
 }
@@ -1437,10 +1459,30 @@ class _AnimatedTitleState extends State<AnimatedTitle>
                     child: AnimatedOpacity(
                       duration: _duration,
                       opacity: _animateopacity.value,
-                      child: Text(
-                        "Greetings!",
-                        style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                            fontSize: 16.sp, fontWeight: FontWeight.w300),
+                      child: Row(
+                        children: [
+                          GestureDetector(
+                            onTap: widget.onTap,
+                            child: Image.asset(
+                              "assets/svg/drawer.png",
+                              height: isTablet() ? 40 : 10,
+                              width: isTablet() ? 40 : 21,
+                              color: model.isDarkTheme ? Colors.white : null,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            "Greetings!",
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyText1!
+                                .copyWith(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w300),
+                          ),
+                        ],
                       ),
                     ),
                   ),

@@ -46,7 +46,7 @@ class _DashBoardViewState extends State<DashBoardView> {
     "Payment \History",
     "Received Amount",
     "Closing \nPayment",
-    // "Bimonthly \nRatio",
+    "Bimonthly \nRatio",
     "Image\nGallery",
     "Update \nProfile",
     "Update Bank Details",
@@ -56,16 +56,16 @@ class _DashBoardViewState extends State<DashBoardView> {
   ];
 
   List<String> grid_menu_icons = [
-    "assets/svg/capital_history.png",
-    "assets/svg/closing_payment_history.png",
-    "assets/svg/received_amount.png",
-    "assets/svg/closing_payment.png",
-    // "assets/svg/ratio.png",
-    "assets/svg/image_gallery.png",
-    "assets/svg/update_profile.png",
-    "assets/svg/update_bank_details.png",
-    "assets/svg/lastamount.png",
-    "assets/svg/personal_profile.png",
+    "assets/newassets/capital_history.png",
+    "assets/newassets/closing_payment_history.png",
+    "assets/newassets/received_amount.png",
+    "assets/newassets/closing_payment.png",
+    "assets/newassets/ratio.png",
+    "assets/newassets/image_gallery.png",
+    "assets/newassets/update_profile.png",
+    "assets/newassets/update_bank_details.png",
+    "assets/newassets/lastamount.png",
+    "assets/newassets/personal_profile.png",
     // "assets/svg/change_pass.svg",
   ];
 
@@ -74,7 +74,7 @@ class _DashBoardViewState extends State<DashBoardView> {
     PaymentHistoryView(), //1
     RecievedAmountView(), //2
     ClosingPaymentView(), //3
-    // BimonthlyRatioScreen(), //4
+    BimonthlyRatioScreen(), //4
     ImageGalleryView(),
     UpdateProfileView(
       isProfileUpdate: false,
@@ -115,28 +115,28 @@ class _DashBoardViewState extends State<DashBoardView> {
       if (isRefrenceAllowed) {
         //
 
-        grid_menu_name.insert(9, 'Reference \nIn');
-
-        grid_menu_icons.insert(
-          9,
-          // 'assets/svg/ref_in.png'
-          "assets/svg/personal_profile.png",
-        );
-        ReferenceInScreen.showData = value.IsShowDataAllowed ?? false;
-
-        views.insert(9, ReferenceInScreen());
-      }
-
-      if (IsSubReferenceAllowed) {
-        grid_menu_name.insert(10, 'Sub Reference');
+        grid_menu_name.insert(10, 'Reference \nIn');
 
         grid_menu_icons.insert(
           10,
+          // 'assets/svg/ref_in.png'
+          "assets/newassets/reference_in.png",
+        );
+        ReferenceInScreen.showData = value.IsShowDataAllowed ?? false;
+
+        views.insert(10, ReferenceInScreen());
+      }
+
+      if (IsSubReferenceAllowed) {
+        grid_menu_name.insert(11, 'Sub Reference');
+
+        grid_menu_icons.insert(
+          11,
           // 'assets/svg/subRefenceIn.png'
-          "assets/svg/personal_profile.png",
+          "assets/newassets/sub_reference.png",
         );
 
-        views.insert(10, SubRefenceSubUserScreen());
+        views.insert(11, SubRefenceSubUserScreen());
       }
 
       setState(() {});
@@ -161,7 +161,12 @@ class _DashBoardViewState extends State<DashBoardView> {
 
     return WillPopScope(
       onWillPop: () async {
-        Navigator.pushReplacementNamed(context, HideCapitalView.routeName);
+        currentScreen.add(screen.home);
+
+        Navigator.pushNamed(context, HideCapitalView.routeName).then((value) {
+          currentScreen.add(screen.home);
+        });
+
         return true;
       },
       child: Scaffold(
@@ -191,6 +196,7 @@ class _DashBoardViewState extends State<DashBoardView> {
         Flexible(
           flex: 2,
           child: CustomTopBar(
+            isNavBar: true,
             topbartitle: 'Dashboard',
           ),
         ),
@@ -253,8 +259,12 @@ class _DashBoardViewState extends State<DashBoardView> {
                         // width: size(context: context).width / 9,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              color: Color(0xff205598),
+                            )
                             // color: Theme.of(context).cardColor,
-                            shape: BoxShape.circle
+                            // shape: BoxShape.circle
                             // borderRadius: BorderRadius.circular(12),
                             // boxShadow: [
                             //   BoxShadow(
@@ -273,14 +283,14 @@ class _DashBoardViewState extends State<DashBoardView> {
                             Image.asset(
                               grid_menu_icons[index],
                               height: (index == 10 || index == 11 || index == 8)
-                                  ? 70.h
+                                  ? 40.h
                                   // 30.h
-                                  : 65.h,
+                                  : 35.h,
                               // 25.h,
                               width: (index == 10 || index == 11 || index == 8)
-                                  ? 70.h
+                                  ? 40.h
                                   // 30.h
-                                  : 65.w,
+                                  : 35.w,
                               // 25.w,
                               fit: BoxFit.contain,
                               // color: isDarkThemeEnabled(context)
@@ -289,11 +299,11 @@ class _DashBoardViewState extends State<DashBoardView> {
                               // color: Color.fromARGB(255, 107, 4, 91),
                             ),
                             SizedBox(
-                              height: 5.h,
+                              height: 10.h,
                             ),
                             Padding(
                               padding: EdgeInsets.symmetric(
-                                  horizontal: 08.w, vertical: 08.h),
+                                  horizontal: 08.w, vertical: 0.h),
                               child: FittedBox(
                                 child: SizedBox(
                                   width: 90.w,

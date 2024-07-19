@@ -8,6 +8,9 @@ import 'package:malikopal/screens/setting/components/setting.widgets.dart';
 import 'package:malikopal/screens/widgets/loading_dialog.dart';
 import 'package:malikopal/utils/utility.dart';
 
+import '../dashboard/custom.widgets/custom_widgets.dart';
+import '../dashboard/dashboard.screens/hidecapital.screen.dart';
+
 class ProfileView extends StatefulWidget {
   const ProfileView({Key? key, this.profileId}) : super(key: key);
   static const routeName = '/profile-screen';
@@ -42,92 +45,105 @@ class _ProfileViewState extends State<ProfileView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
-      body: SafeArea(
-        child: ListView(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          children: [
-            CustomTopBar(
-                backButtonColor:
-                    isDarkThemeEnabled(context) ? Colors.white : Colors.black,
-                topbartitle: "View Profile"),
-            Container(
-              height: MediaQuery.of(context).size.height - 100.h,
-              child: ListView(
-                shrinkWrap: true,
-                physics: ClampingScrollPhysics(),
-                children: [
-                  ShowUpAnimation(
-                    delayStart: Duration(milliseconds: 0),
-                    animationDuration: Duration(milliseconds: 500),
-                    curve: Curves.fastOutSlowIn,
-                    direction: Direction.horizontal,
-                    offset: 0.7.w,
-                    child: ListView(
-                      shrinkWrap: true,
-                      physics: ClampingScrollPhysics(),
-                      children: [
-                        customlableText(
-                          lable: 'User ID',
-                          subtitle: data?.userID ?? "",
-                        ),
-                        customlableText(
-                            lable: 'Name',
-                            subtitle: data?.accountHolderName ?? ""),
-                        customlableText(
-                            lable: 'Guardian Type',
-                            subtitle: data?.guardianType ?? ""),
-                        customlableText(
-                            lable: 'Guardian Name',
-                            subtitle: data?.fatherName ?? ""),
-                        customlableText(
-                            lable: 'CNIC Issued date',
-                            subtitle: data?.cnicIssuedDate ?? ""),
-                        customlableText(
-                            lable: 'CNIC',
-                            subtitle: data?.accountHolderCNIC ?? ""),
-                        customlableText(
-                            lable: 'Email ID', subtitle: data?.email ?? ""),
-                        customlableText(
-                          lable: 'Address',
-                          subtitle: data?.address ?? "",
-                        ),
-                        customlableText(
-                            lable: 'Mobile', subtitle: data?.phoneNumber ?? ""),
-                        customlableText(
-                            lable: 'Next Of Kin',
-                            subtitle: data?.nextOfKinName ?? ""),
-                        customlableText(
-                            lable: 'Next Of Kin CNIC',
-                            subtitle: data?.nextOfKinCNIC ?? ""),
-                        customlableText(
-                            lable: 'Next Of Kin Contact Number',
-                            subtitle: data?.nextOfKinPhone ?? ""),
-                        customlableText(
-                            lable: 'Relation With Next of Kin',
-                            subtitle: data?.nextOfKinRelation ?? ""),
+    return WillPopScope(
+      onWillPop: ()async{
+        currentScreen.add(screen.home);
 
-                        // AnimatedLongButton(
-                        //   text: "Send",
-                        //   isBgColorWhite: false,
-                        //   width: MediaQuery.of(context).size.width * 0.95.w,
-                        //   color: [
-                        //     Color(0xFFFF708C),
-                        //     Color(0xFFF2E07D),
-                        //   ],
-                        // ),
-                        SizedBox(
-                          height: 70.h,
-                        ),
-                      ],
+              Navigator.pushNamed(context, HideCapitalView.routeName)
+                  .then((value) {
+                currentScreen.add(screen.home);
+              });
+ return true;
+      },
+      child: Scaffold(
+        bottomNavigationBar: AnimatedBottomNavBar(),
+        backgroundColor: Theme.of(context).backgroundColor,
+        body: SafeArea(
+          child: ListView(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            children: [
+              CustomTopBar(
+                isNavBar:  true,
+                  backButtonColor:
+                      isDarkThemeEnabled(context) ? Colors.white : Colors.black,
+                  topbartitle: "View Profile"),
+              Container(
+                height: MediaQuery.of(context).size.height - 100.h,
+                child: ListView(
+                  shrinkWrap: true,
+                  physics: ClampingScrollPhysics(),
+                  children: [
+                    ShowUpAnimation(
+                      delayStart: Duration(milliseconds: 0),
+                      animationDuration: Duration(milliseconds: 500),
+                      curve: Curves.fastOutSlowIn,
+                      direction: Direction.horizontal,
+                      offset: 0.7.w,
+                      child: ListView(
+                        shrinkWrap: true,
+                        physics: ClampingScrollPhysics(),
+                        children: [
+                          customlableText(
+                            lable: 'User ID',
+                            subtitle: data?.userID ?? "",
+                          ),
+                          customlableText(
+                              lable: 'Name',
+                              subtitle: data?.accountHolderName ?? ""),
+                          customlableText(
+                              lable: 'Guardian Type',
+                              subtitle: data?.guardianType ?? ""),
+                          customlableText(
+                              lable: 'Guardian Name',
+                              subtitle: data?.fatherName ?? ""),
+                          customlableText(
+                              lable: 'CNIC Issued date',
+                              subtitle: data?.cnicIssuedDate ?? ""),
+                          customlableText(
+                              lable: 'CNIC',
+                              subtitle: data?.accountHolderCNIC ?? ""),
+                          customlableText(
+                              lable: 'Email ID', subtitle: data?.email ?? ""),
+                          customlableText(
+                            lable: 'Address',
+                            subtitle: data?.address ?? "",
+                          ),
+                          customlableText(
+                              lable: 'Mobile', subtitle: data?.phoneNumber ?? ""),
+                          customlableText(
+                              lable: 'Next Of Kin',
+                              subtitle: data?.nextOfKinName ?? ""),
+                          customlableText(
+                              lable: 'Next Of Kin CNIC',
+                              subtitle: data?.nextOfKinCNIC ?? ""),
+                          customlableText(
+                              lable: 'Next Of Kin Contact Number',
+                              subtitle: data?.nextOfKinPhone ?? ""),
+                          customlableText(
+                              lable: 'Relation With Next of Kin',
+                              subtitle: data?.nextOfKinRelation ?? ""),
+    
+                          // AnimatedLongButton(
+                          //   text: "Send",
+                          //   isBgColorWhite: false,
+                          //   width: MediaQuery.of(context).size.width * 0.95.w,
+                          //   color: [
+                          //     Color(0xFFFF708C),
+                          //     Color(0xFFF2E07D),
+                          //   ],
+                          // ),
+                          SizedBox(
+                            height: 70.h,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

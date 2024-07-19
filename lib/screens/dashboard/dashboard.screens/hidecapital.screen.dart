@@ -1,10 +1,18 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:malikopal/bloc/dash_board_bloc.dart';
+import 'package:malikopal/screens/dashboard/dashboard.screens/dashboard.dart';
+import 'package:malikopal/screens/setting/payment_history.dart';
+import 'package:malikopal/screens/setting/profile_screen.dart';
+import 'package:malikopal/screens/setting/referenceIn_screen.dart';
+import 'package:malikopal/screens/setting/setting.dart';
+import 'package:malikopal/screens/setting/update_profile.dart';
+import 'package:malikopal/screens/widgets/drawer.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -101,7 +109,8 @@ class _HideCapitalViewState extends State<HideCapitalView>
   bool isShowCapital = false;
 
   bool firstload = true;
-
+  bool isRefrenceAllowed = false;
+  bool IsSubReferenceAllowed = false;
   @override
   void initState() {
     _bloc = DashBoardBloc();
@@ -145,6 +154,38 @@ class _HideCapitalViewState extends State<HideCapitalView>
 
     UpdateAniamtion();
     reverseAniamtion();
+    SessionData().getUserProfile().then((value) {
+      // ,
+      //
+
+      isRefrenceAllowed = kReleaseMode ? value.IsRefrenceInAllowed : true;
+
+      IsSubReferenceAllowed =
+          kReleaseMode ? value.IsSubReferenceAllowed ?? false : true;
+
+      if (isRefrenceAllowed) {
+        //
+        ReferenceInScreen.showData = value.IsShowDataAllowed ?? false;
+        drawerList.insert(
+            4,
+            DrawerModel(
+                title: 'Reference In',
+                icon: 'reference_in',
+                widget: ReferenceInScreen()));
+      }
+
+      if (IsSubReferenceAllowed) {
+        drawerList.insert(
+            5,
+            DrawerModel(
+                title: 'Sub Reference',
+                icon: 'sub_reference',
+                widget: ReferenceInScreen()));
+      }
+
+      setState(() {});
+    });
+
     super.initState();
   }
 
@@ -156,13 +197,36 @@ class _HideCapitalViewState extends State<HideCapitalView>
     super.dispose();
   }
 
+  List<DrawerModel> drawerList = <DrawerModel>[
+    DrawerModel(
+        title: "Dashboard", icon: 'dashboardp', widget: DashBoardView()),
+    DrawerModel(
+        title: "Payment History",
+        icon: 'closing_payment_history',
+        widget: PaymentHistoryView()),
+    DrawerModel(
+      title: "Update Profile",
+      icon: 'update_profile',
+      widget: UpdateProfileView(
+        isProfileUpdate: false,
+        isBankDetailUpdate: false,
+      ),
+    ),
+    DrawerModel(
+        title: "View Profile", icon: 'personal_profile', widget: ProfileView()),
+    DrawerModel(title: "Settings", icon: 'settings', widget: SettingScreen()),
+  ];
   bool isGlowOn = true;
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     AppModel model = ScopedModel.of<AppModel>(context);
 
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: customDrawer(
+          context: context, drawerList: drawerList, key: _scaffoldKey),
       bottomNavigationBar: AnimatedBottomNavBar(),
       body: WillPopScope(
         onWillPop: () async {
@@ -188,269 +252,278 @@ class _HideCapitalViewState extends State<HideCapitalView>
                     //         child: AnimatedTopBarTile(
                     //             notificationCount:
                     //                 data?.NotificationCount ?? 0))),
-                    Flexible(
-                      flex: 04,
-                      child: Container(
-                        // height: size.height * 0.14,
-                        child: Padding(
-                          padding: EdgeInsets.only(top: 06.0.h),
-                          child: AnimatedTitle(
-                              data: data,
-                              trailing: AnimatedOpacity(
-                                duration: _duration,
-                                opacity: 1, //_opacity.value,
-                                child: SizedBox(
-                                  width: 150.w,
-                                  child: Stack(
-                                    children: [
-                                      Positioned(
-                                        right: 0,
-                                        top: 0,
-                                        bottom: 0,
-                                        child: Container(
-                                          width: 60.h,
-                                          height: 60.h,
-                                          alignment: Alignment.centerRight,
-                                          decoration: BoxDecoration(
+                    // Flexible(
+                    //   flex: 04,
+                    //   child:
+                    Container(
+                      // height: size.height * 0.14,
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 06.0.h),
+                        child: AnimatedTitle(
+                            onTap: () {
+                              _scaffoldKey.currentState?.openDrawer();
+                            },
+                            data: data,
+                            trailing: AnimatedOpacity(
+                              duration: _duration,
+                              opacity: 1, //_opacity.value,
+                              child: SizedBox(
+                                width: 150.w,
+                                child: Stack(
+                                  children: [
+                                    Positioned(
+                                      right: 0,
+                                      top: 0,
+                                      bottom: 0,
+                                      child: Container(
+                                        width: 60.h,
+                                        height: 60.h,
+                                        alignment: Alignment.centerRight,
+                                        decoration: BoxDecoration(
 
-                                              // color: Color(0xFFAAA7A7),
-                                              borderRadius:
-                                                  BorderRadius.circular(50),
-                                              border: Border.all(
-                                                  color: Color(0xff1F5FA2))),
-                                          child: Visibility(
-                                              visible: true, // isShowCapital,
-                                              child: FittedBox(
-                                                child: GestureDetector(
-                                                  onTap: () {
-                                                    Navigator.pushNamed(
-                                                        context,
-                                                        NotificationView
-                                                            .routeName);
-                                                  },
-                                                  child: CircleAvatar(
-                                                    radius: 60.h,
-                                                    backgroundColor:
-                                                        Color(0xffD0D8F5),
-                                                    child: Image.asset(
-                                                      "assets/images/notification.png",
-                                                      height: 50.h,
-                                                      width: 50.w,
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
-                                                ),
-                                              )),
-                                        ),
-                                      ),
-                                      Positioned(
-                                        right: 40,
-                                        top: 0,
-                                        bottom: 0,
-                                        child: Container(
-                                          width: 80.h,
-                                          height: 80.h,
-                                          alignment: Alignment.centerRight,
-                                          decoration: BoxDecoration(
-                                              // color: Color(0xFFAAA7A7),
-                                              borderRadius:
-                                                  BorderRadius.circular(50)),
-                                          child: Visibility(
-                                              visible: true, // isShowCapital,
-                                              child: FittedBox(
+                                            // color: Color(0xFFAAA7A7),
+                                            borderRadius:
+                                                BorderRadius.circular(50),
+                                            border: Border.all(
+                                                color: Color(0xff1F5FA2))),
+                                        child: Visibility(
+                                            visible: true, // isShowCapital,
+                                            child: FittedBox(
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  Navigator.pushNamed(
+                                                      context,
+                                                      NotificationView
+                                                          .routeName);
+                                                },
                                                 child: CircleAvatar(
                                                   radius: 60.h,
-                                                  backgroundImage: NetworkImage(
-                                                      // Endpoints.profilePicUrl +
-                                                      //     (data?.image ?? "")
-                                                      data?.image == null
-                                                          ? Endpoints
-                                                              .noProfilePicUrl
-                                                          : (Endpoints
-                                                                  .profilePicUrl +
-                                                              (data?.image ??
-                                                                  ""))),
+                                                  backgroundColor:
+                                                      Color(0xffD0D8F5),
+                                                  child: Image.asset(
+                                                    "assets/images/notification.png",
+                                                    height: 50.h,
+                                                    width: 50.w,
+                                                    fit: BoxFit.cover,
+                                                  ),
                                                 ),
-                                              )),
-                                        ),
+                                              ),
+                                            )),
                                       ),
+                                    ),
+                                    Positioned(
+                                      right: 40,
+                                      top: 0,
+                                      bottom: 0,
+                                      child: Container(
+                                        width: 80.h,
+                                        height: 80.h,
+                                        alignment: Alignment.centerRight,
+                                        decoration: BoxDecoration(
+                                            // color: Color(0xFFAAA7A7),
+                                            borderRadius:
+                                                BorderRadius.circular(50)),
+                                        child: Visibility(
+                                            visible: true, // isShowCapital,
+                                            child: FittedBox(
+                                              child: CircleAvatar(
+                                                radius: 60.h,
+                                                backgroundImage: NetworkImage(
+                                                    // Endpoints.profilePicUrl +
+                                                    //     (data?.image ?? "")
+                                                    data?.image == null
+                                                        ? Endpoints
+                                                            .noProfilePicUrl
+                                                        : (Endpoints
+                                                                .profilePicUrl +
+                                                            (data?.image ??
+                                                                ""))),
+                                              ),
+                                            )),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )),
+                      ),
+                    ),
+                    // ),
+                    // Flexible(
+                    //   flex: 4,
+                    //   child:
+                    Column(
+                      // crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        // SizedBox(
+                        //   height: 12,
+                        // ),
+                        SizedBox(
+                          // height: MediaQuery.of(context).size.height / 3,
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 10,
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                      child: Container(
+                                    height: 1,
+                                    color: Colors.black.withOpacity(0.25),
+                                  )),
+                                  // GestureDetector(
+                                  //   onTap: () {
+                                  //     setState(() {
+                                  //       isShowCapital = !isShowCapital;
+                                  //       // showIcon = true;
+                                  //     });
+                                  //   },
+                                  //   child: Container(
+                                  //     padding: EdgeInsets.all(5),
+                                  //     decoration: BoxDecoration(
+                                  //         shape: BoxShape.circle,
+                                  //         border: Border.all(
+                                  //             color: Color(0xff272E6D))),
+                                  //     child: Icon(
+                                  //       isShowCapital
+                                  //           ? Icons.keyboard_arrow_down
+                                  //           : Icons.keyboard_arrow_up,
+                                  //       // Image.asset(
+                                  //       // isShowCapital
+                                  //       //     ? "assets/svg/arrowDown.png"
+                                  //       //     : "assets/svg/arrowUp.png",
+                                  //       // width: MediaQuery.of(context).size.width,
+                                  //     ),
+                                  //   ),
+                                  // ),
+                                  // Expanded(
+                                  //     child: Container(
+                                  //   height: 1,
+                                  //   color: Colors.black.withOpacity(0.25),
+                                  // )),
+                                ],
+                              ),
+                              // Spacer(
+                              //   flex: 5,
+                              // ),
+                              SizedBox(
+                                height: 20,
+                              ),
+                              AnimatedOpacity(
+                                opacity: 1.0,
+                                duration: Duration(seconds: 1),
+                                curve: Curves.linear,
+                                child: Container(
+                                  alignment: Alignment.topLeft,
+                                  padding:
+                                      EdgeInsets.only(top: 20.h, left: 20.h),
+                                  width: 345.w,
+                                  height: 180.h,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(16.h),
+                                      image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: AssetImage(
+                                              'assets/images/Base.png'))),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Total Capital",
+                                        // textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w800,
+                                            fontSize: 16.sp,
+                                            // height: 19.6.h,
+                                            color: Colors.white,
+
+                                            //  model.isDarkTheme
+                                            //     ? Colors.white
+                                            //     : Color(0xff606161),
+                                            fontFamily: "Montserrat"),
+                                      ),
+                                      Spacer(),
+
+                                      capitalAmountWidget(
+                                        context,
+                                        size,
+                                      ),
+                                      Spacer(),
+                                      // Text(
+                                      //   "Total ",
+                                      //   style: TextStyle(
+                                      //       fontWeight: FontWeight.w400,
+                                      //       fontSize: 16.sp,
+                                      //       color: model.isDarkTheme
+                                      //           ? Colors.white
+                                      //           : Color(0xff606161),
+                                      //       fontFamily: "Montserrat"),
+                                      // ),
+                                      // SizedBox(
+                                      //   width: 12,
+                                      // ),
+                                      // SvgPicture.asset(
+                                      //   "assets/newassets/homeIson.svg",
+                                      //   color: Color(0xff1164AA),
+                                      //   width: 50,
+                                      //   height: 50,
+                                      // ),
+                                      // SizedBox(
+                                      //   width: 12,
+                                      // ),
+                                      // Text(
+                                      //   "Capital",
+                                      //   style: TextStyle(
+                                      //       fontWeight: FontWeight.w400,
+                                      //       color: model.isDarkTheme
+                                      //           ? Colors.white
+                                      //           : Color(0xff606161),
+                                      //       fontSize: 16.sp,
+                                      //       fontFamily: "Montserrat"),
+                                      // ),
                                     ],
                                   ),
                                 ),
-                              )),
-                        ),
-                      ),
-                    ),
-                    Flexible(
-                      flex: 20,
-                      child: Column(
-                        // crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          // SizedBox(
-                          //   height: 12,
-                          // ),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height / 3,
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                        child: Container(
-                                      height: 1,
-                                      color: Colors.black.withOpacity(0.25),
-                                    )),
-                                    GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          isShowCapital = !isShowCapital;
-                                          // showIcon = true;
-                                        });
-                                      },
-                                      child: Container(
-                                        padding: EdgeInsets.all(5),
-                                        decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                                color: Color(0xff272E6D))),
-                                        child: Icon(
-                                          isShowCapital
-                                              ? Icons.keyboard_arrow_down
-                                              : Icons.keyboard_arrow_up,
-                                          // Image.asset(
-                                          // isShowCapital
-                                          //     ? "assets/svg/arrowDown.png"
-                                          //     : "assets/svg/arrowUp.png",
-                                          // width: MediaQuery.of(context).size.width,
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                        child: Container(
-                                      height: 1,
-                                      color: Colors.black.withOpacity(0.25),
-                                    )),
-                                  ],
-                                ),
-                                Spacer(
-                                  flex: 5,
-                                ),
-                                AnimatedOpacity(
-                                  opacity: isShowCapital ? 1.0 : 0.0,
-                                  duration: Duration(seconds: 1),
-                                  curve: Curves.linear,
-                                  child: Container(
-                                    alignment: Alignment.topLeft,
-                                    padding:
-                                        EdgeInsets.only(top: 20.h, left: 20.h),
-                                    width: 345.w,
-                                    height: 180.h,
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(16.h),
-                                        image: DecorationImage(
-                                            fit: BoxFit.cover,
-                                            image: AssetImage(
-                                                'assets/images/Base.png'))),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Total Capital",
-                                          // textAlign: TextAlign.left,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w800,
-                                              fontSize: 16.sp,
-                                              // height: 19.6.h,
-                                              color: Colors.white,
+                              ),
+                              // SizedBox(
+                              //   height: 4,
+                              // ),
+                              // AnimatedOpacity(
+                              //   opacity: isShowCapital ? 1.0 : 0.0,
+                              //   duration: Duration(seconds: 1),
+                              //   curve: Curves.linear,
+                              //   child: Padding(
+                              //     padding:
+                              //         EdgeInsets.symmetric(vertical: 10.0.h),
+                              //     child: FittedBox(
+                              //         child: Container(
+                              //             width: size.width.w,
+                              //             child:
 
-                                              //  model.isDarkTheme
-                                              //     ? Colors.white
-                                              //     : Color(0xff606161),
-                                              fontFamily: "Montserrat"),
-                                        ),
-                                        Spacer(
-                                          flex: 10,
-                                        ),
-
-                                        capitalAmountWidget(
-                                          context,
-                                          size,
-                                        ),
-                                        // Text(
-                                        //   "Total ",
-                                        //   style: TextStyle(
-                                        //       fontWeight: FontWeight.w400,
-                                        //       fontSize: 16.sp,
-                                        //       color: model.isDarkTheme
-                                        //           ? Colors.white
-                                        //           : Color(0xff606161),
-                                        //       fontFamily: "Montserrat"),
-                                        // ),
-                                        // SizedBox(
-                                        //   width: 12,
-                                        // ),
-                                        // SvgPicture.asset(
-                                        //   "assets/newassets/homeIson.svg",
-                                        //   color: Color(0xff1164AA),
-                                        //   width: 50,
-                                        //   height: 50,
-                                        // ),
-                                        // SizedBox(
-                                        //   width: 12,
-                                        // ),
-                                        // Text(
-                                        //   "Capital",
-                                        //   style: TextStyle(
-                                        //       fontWeight: FontWeight.w400,
-                                        //       color: model.isDarkTheme
-                                        //           ? Colors.white
-                                        //           : Color(0xff606161),
-                                        //       fontSize: 16.sp,
-                                        //       fontFamily: "Montserrat"),
-                                        // ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                // SizedBox(
-                                //   height: 4,
-                                // ),
-                                // AnimatedOpacity(
-                                //   opacity: isShowCapital ? 1.0 : 0.0,
-                                //   duration: Duration(seconds: 1),
-                                //   curve: Curves.linear,
-                                //   child: Padding(
-                                //     padding:
-                                //         EdgeInsets.symmetric(vertical: 10.0.h),
-                                //     child: FittedBox(
-                                //         child: Container(
-                                //             width: size.width.w,
-                                //             child:
-
-                                //             capitalAmountWidget(
-                                //               context,
-                                //               size,
-                                //             ))),
-                                //   ),
-                                // ),
-                                Spacer(
-                                  flex: 3,
-                                ),
-                              ],
-                            ),
+                              //             capitalAmountWidget(
+                              //               context,
+                              //               size,
+                              //             ))),
+                              //   ),
+                              // ),
+                              // Spacer(
+                              //   flex: 3,
+                              // ),
+                            ],
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
+                    // ),
                     CustomAnimationsWidgets(
                       isLogin: widget.isLogin,
                       isreverse: !isShowCapital,
                       data: data,
                     ),
-                    SizedBox(height: 25)
+                    // SizedBox(height: 25)
                   ],
                 ),
               ),
@@ -490,19 +563,47 @@ class _HideCapitalViewState extends State<HideCapitalView>
           //     ),
           //     Flexible(
           //       child:
-          Text(
-              Constant.currencyFormatWithoutDecimal
-                  .format(data?.totalCapital ?? 0),
-              maxLines: 2,
-              style: Theme.of(context).textTheme.headline6!.copyWith(
-                    fontSize: 24.sp,
-                    fontWeight: FontWeight.w800,
-                    fontFamily: "Manrope",
-                    color: Colors.white,
-                  )
+          Row(
+        children: [
+          isShowCapital == true
+              ? Text(
+                  "*********",
+                  style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                        fontSize: 24.sp,
+                        fontFamily: 'Montserrat',
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
+                )
+              : Text(
+                  Constant.currencyFormatWithoutDecimal
+                      .format(data?.totalCapital ?? 0),
+                  maxLines: 2,
+                  style: Theme.of(context).textTheme.headline6!.copyWith(
+                        fontSize: 24.sp,
+                        fontWeight: FontWeight.w800,
+                        fontFamily: "Manrope",
+                        color: Colors.white,
+                      ),
 
-              //  model.isDarkTheme ? Colors.white : Colors.black),
-              ),
+                  //  model.isDarkTheme ? Colors.white : Colors.black),
+                ),
+          SizedBox(
+            width: 5,
+          ),
+          GestureDetector(
+            onTap: () {
+              setState(() {
+                isShowCapital = !isShowCapital;
+              });
+            },
+            child: Icon(
+              isShowCapital ? Icons.visibility : Icons.visibility_off,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
 
       //     ),
       //   ],
@@ -571,28 +672,30 @@ class _CustomAnimationsWidgetsState extends State<CustomAnimationsWidgets>
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+    List<Widget> bottomWidget = <Widget>[
+      closingPaymentWidget(context, isLogin: widget.isLogin),
+      rolloverWidget(width, context),
+      autoRollOver(width, context),
+      withdrawWidget(width, context)
+    ];
     return AnimatedBuilder(
         animation: _animController.view,
         builder: (context, child) {
-          return SizedBox(
-            width: width,
-            height: isTablet() ? 135 : 125,
-            child: Row(
-              children: [
-                SizedBox(
-                  width: 12,
+          return Flexible(
+            child: GridView.builder(
+                padding: EdgeInsets.symmetric(
+                    horizontal: isTablet() ? 60 : 20, vertical: 20),
+                shrinkWrap: true,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: isTablet() ? 30 : 10,
+                  crossAxisSpacing: isTablet() ? 30 : 10,
+                  // mainAxisExtent: isTablet() ? null : 180
                 ),
-                Expanded(
-                    child:
-                        closingPaymentWidget(context, isLogin: widget.isLogin)),
-                Expanded(child: rolloverWidget(width, context)),
-                Expanded(child: autoRollOver(width, context)),
-                Expanded(child: withdrawWidget(width, context)),
-                SizedBox(
-                  width: 12,
-                ),
-              ],
-            ),
+                itemCount: bottomWidget.length,
+                itemBuilder: (context, index) {
+                  return bottomWidget[index];
+                }),
           );
         });
   }
@@ -609,10 +712,10 @@ class _CustomAnimationsWidgetsState extends State<CustomAnimationsWidgets>
         );
       },
       child: NewMenuButton(
-          asssetsName: "assets/newassets/all_rollover.svg",
-          text: "All\n Rollover",
+          asssetsName: "assets/newassets/all_rollover.png",
+          text: "All Rollover",
           // bgColor: Color(0xff912C8C)
-          bgColor: Color(0xffE3E7F7)),
+          bgColor: Color(0xffffffff)),
     );
   }
 
@@ -639,11 +742,11 @@ class _CustomAnimationsWidgetsState extends State<CustomAnimationsWidgets>
                 //
               },
               child: NewMenuButton(
-                  asssetsName: "assets/newassets/closing_payment.svg",
-                  text: "Closing \n Payment",
+                  asssetsName: "assets/newassets/closing_payment.png",
+                  text: "Closing Payment",
                   bgColor: widget.data?.isClosingDays == true
                       ? Color(0xffF27224)
-                      : Color(0xffE3E7F7)
+                      : Color(0xffffffff)
                   // Color(0xff912C8C)
                   ),
             ),
@@ -665,11 +768,11 @@ class _CustomAnimationsWidgetsState extends State<CustomAnimationsWidgets>
               //
             },
             child: NewMenuButton(
-                asssetsName: "assets/newassets/closing_payment.svg",
-                text: "Closing \n Payment",
+                asssetsName: "assets/newassets/closing_payment.png",
+                text: "Closing Payment",
                 bgColor: widget.data?.isClosingDays == true
                     ? Color(0xffF27224)
-                    : Color(0xffE3E7F7)
+                    : Color(0xffffffff)
                 // Color(0xff912C8C)
                 ),
           );
@@ -686,10 +789,10 @@ class _CustomAnimationsWidgetsState extends State<CustomAnimationsWidgets>
               child: AutoRollOverStatus()),
         );
       },
-      asssetsName: "assets/newassets/auto_roller_over.svg",
+      asssetsName: "assets/newassets/auto_rollover.png",
       // bgColor: Color(0xff912C8C),
-      bgColor: Color(0xffE3E7F7),
-      text: 'Auto \n Rollover',
+      bgColor: Color(0xffffffff),
+      text: 'Auto Rollover',
     );
   }
 
@@ -704,9 +807,9 @@ class _CustomAnimationsWidgetsState extends State<CustomAnimationsWidgets>
                 child: WithDrawalHoverLayerView()),
           );
         },
-        asssetsName: "assets/newassets/capital_width.svg",
-        text: "Withdraw\n Capital",
+        asssetsName: "assets/newassets/_06.png",
+        text: "Withdraw Capital",
         // bgColor: Color(0xff912C8C)
-        bgColor: Color(0xffE3E7F7));
+        bgColor: Color(0xffffffff));
   }
 }

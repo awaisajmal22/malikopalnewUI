@@ -139,9 +139,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             reverse: true,
             child: Container(
               decoration: BoxDecoration(
-                  image: DecorationImage(
-                      alignment: Alignment.topCenter,
-                      image: AssetImage('assets/images/loginbackground.png'))),
+                  // image: DecorationImage(
+                  //     alignment: Alignment.topCenter,
+                  //     image: AssetImage('assets/images/loginbackground.png')
+                  //     )
+                  ),
               child: AnimatedBuilder(
                   animation: _controller.view,
                   builder: (context, child) {
@@ -259,145 +261,168 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         builder: (context, child) {
           return Container(
             padding: EdgeInsets.symmetric(horizontal: 12),
-            margin: EdgeInsets.only(top: 50.h),
-            child: Column(
-              children: <Widget>[
-                SizedBox(
-                  height: 70.h,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, top: 10),
-                  child: Image.asset("assets/svg/capital.png"),
-                ),
-                // GlowSetting(
-                //   color: Color(0xff1164AA).withOpacity(0.1),
-                //   color1: Color(0xff1164AA).withOpacity(0.7),
-                //   radius: size.height < 700 ? 150 : 170,
-                //   child: Container(
-                //     height: 75.h,
-                //     width: 75.h,
-                //     child:
-                //     Image.asset(
-                //       "assets/svg/capital.png",
-                //     ),
-                //   ),
-                // ),
-                SizedBox(
-                  height: size.height * 0.1.h,
-                ),
-
-                Container(
-                  alignment: Alignment.topLeft,
-                  padding: EdgeInsets.only(left: 20.w),
-                  child: Text(
-                    "Hi, Welcome Back!",
-                    style: TextStyle(
-                        fontFamily: 'Manrope',
-                        letterSpacing: 1.5.h,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 24.h),
-                  ),
-                ),
-                SizedBox(
-                  height: size.height * 0.01.h,
-                ),
-                Container(
-                  alignment: Alignment.topLeft,
-                  padding: EdgeInsets.only(left: 20.w),
-                  child: Text(
-                    "Sign in to your account.",
-                    style: TextStyle(
-                        color: Color(0xffA2A0A8),
-                        fontFamily: 'Manrope',
-                        letterSpacing: 1.5.h,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 16.h),
-                  ),
-                ),
-
-                SizedBox(
-                  height: size.height * 0.04.h,
-                ),
-                CustomTextField(context, userID),
-                SizedBox(
-                  height: 35.h,
-                ),
-                CustomTextField(context, password),
-                SizedBox(
-                  height: 35.h,
-                ),
-                SignedIntext(
-                  checkbox: Container(
-                    height: 22.h,
-                    width: 22.h,
-                    decoration: BoxDecoration(
-                      // shape: BoxShape.circle,
-                      border:
-                          Border.all(color: Color(0xffACBBF3), width: 2.0.w),
+            margin: EdgeInsets.only(top: 0.h),
+            child: Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                Positioned(
+                    left: 0,
+                    right: 0,
+                    top: isTablet() ? -700 : -200,
+                    child: Image.asset(
+                      'assets/newassets/spbg.png',
+                      color: isDarkThemeEnabled(context)
+                          ? Colors.black.withOpacity(0.4)
+                          : null,
+                    )),
+                Column(
+                  children: <Widget>[
+                    SizedBox(
+                      height: 70.h,
                     ),
-                    child: Checkbox(
-                        fillColor: MaterialStateProperty.all(
-                            Theme.of(context).backgroundColor),
-                        // shape: CircleBorder(),
-                        checkColor: Theme.of(context).dividerColor,
-                        value: ticked,
-                        onChanged: (Checked) {
-                          setState(() {
-                            ticked = Checked!;
-                            print(
-                              "keep me login checked $ticked \t ",
-                            );
-                          });
-                        }),
-                  ),
-                ),
-                SizedBox(
-                  height: 35.h,
-                ),
-                GestureDetector(
-                  onTap: () async {
-                    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-                    data = LoginFormDataModel(
-                        email: _usernametextcontroller.text,
-                        password: _passwordtextcontroller.text,
-                        Version: packageInfo.buildNumber);
-                    if (data.email.isEmpty) {
-                      showSnackBar(context, 'Username may not be empty.', true);
-                      return;
-                    }
-                    if (data.password.isEmpty) {
-                      showSnackBar(context, 'Password may not be empty.', true);
-                      return;
-                    }
-                    focusNode.unfocus();
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20, top: 10),
+                      child: Image.asset(
+                        "assets/svg/splashlogo.png",
+                        height: isTablet()
+                            ? size.height.h * 0.14
+                            : size.height.h * 0.20,
+                      ),
+                    ),
+                    // GlowSetting(
+                    //   color: Color(0xff1164AA).withOpacity(0.1),
+                    //   color1: Color(0xff1164AA).withOpacity(0.7),
+                    //   radius: size.height < 700 ? 150 : 170,
+                    //   child: Container(
+                    //     height: 75.h,
+                    //     width: 75.h,
+                    //     child:
+                    //     Image.asset(
+                    //       "assets/svg/capital.png",
+                    //     ),
+                    //   ),
+                    // ),
+                    SizedBox(
+                      height: size.height * 0.02.h,
+                    ),
 
-                    _bloc.postLoginFormData(data);
-                  },
-                  child: CustomButton(
-                    
-                    title: 'SIGN IN',
-                  ),
-                ),
-                SizedBox(
-                  height: 30.h,
-                ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, ForgetPsswordScreen.routeName);
-                  },
-                  child: Text(
-                    'Forgot Password?',
-                    overflow: TextOverflow.visible,
-                    softWrap: true,
-                    style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                        color: Color(0xff1F5FA2),
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Manrope',
-                        fontSize: 16.sp),
-                  ),
-                ),
-                SizedBox(
-                  height: 30.h,
+                    Container(
+                      alignment: Alignment.topLeft,
+                      padding: EdgeInsets.only(left: 20.w),
+                      child: Text(
+                        "Hi, Welcome Back!",
+                        style: TextStyle(
+                            fontFamily: 'Manrope',
+                            letterSpacing: 1.5.h,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 24.h),
+                      ),
+                    ),
+                    SizedBox(
+                      height: size.height * 0.01.h,
+                    ),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      padding: EdgeInsets.only(left: 20.w),
+                      child: Text(
+                        "Sign in to your account.",
+                        style: TextStyle(
+                            color: Color(0xffA2A0A8),
+                            fontFamily: 'Manrope',
+                            letterSpacing: 1.5.h,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 16.h),
+                      ),
+                    ),
+
+                    SizedBox(
+                      height: size.height * 0.04.h,
+                    ),
+                    CustomTextField(context, userID),
+                    SizedBox(
+                      height: 35.h,
+                    ),
+                    CustomTextField(context, password),
+                    SizedBox(
+                      height: 35.h,
+                    ),
+                    SignedIntext(
+                      checkbox: Container(
+                        height: 22.h,
+                        width: 22.h,
+                        decoration: BoxDecoration(
+                          // shape: BoxShape.circle,
+                          border: Border.all(
+                              color: Color(0xffACBBF3), width: 2.0.w),
+                        ),
+                        child: Checkbox(
+                            fillColor: MaterialStateProperty.all(
+                                Theme.of(context).backgroundColor),
+                            // shape: CircleBorder(),
+                            checkColor: Theme.of(context).dividerColor,
+                            value: ticked,
+                            onChanged: (Checked) {
+                              setState(() {
+                                ticked = Checked!;
+                                print(
+                                  "keep me login checked $ticked \t ",
+                                );
+                              });
+                            }),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 35.h,
+                    ),
+                    GestureDetector(
+                      onTap: () async {
+                        PackageInfo packageInfo =
+                            await PackageInfo.fromPlatform();
+                        data = LoginFormDataModel(
+                            email: _usernametextcontroller.text,
+                            password: _passwordtextcontroller.text,
+                            Version: packageInfo.buildNumber);
+                        if (data.email.isEmpty) {
+                          showSnackBar(
+                              context, 'Username may not be empty.', true);
+                          return;
+                        }
+                        if (data.password.isEmpty) {
+                          showSnackBar(
+                              context, 'Password may not be empty.', true);
+                          return;
+                        }
+                        focusNode.unfocus();
+
+                        _bloc.postLoginFormData(data);
+                      },
+                      child: CustomButton(
+                        title: 'SIGN IN',
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30.h,
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushNamed(
+                            context, ForgetPsswordScreen.routeName);
+                      },
+                      child: Text(
+                        'Forgot Password?',
+                        overflow: TextOverflow.visible,
+                        softWrap: true,
+                        style: Theme.of(context).textTheme.bodyText1!.copyWith(
+                            color: Color(0xff1F5FA2),
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Manrope',
+                            fontSize: 16.sp),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30.h,
+                    ),
+                  ],
                 ),
               ],
             ),

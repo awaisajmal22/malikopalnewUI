@@ -117,18 +117,19 @@ class _SplashScreenState extends State<SplashScreen>
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor:
+          isDarkThemeEnabled(context) ? Color(0xFF2A2D2E) : Colors.white,
       body: Container(
         height: size.height,
         width: size.width,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(
-              "assets/images/splash.png",
-            ),
-            fit: BoxFit.fill,
-          ),
-        ),
+        // decoration: BoxDecoration(
+        //   image: DecorationImage(
+        //     image: AssetImage(
+        //       "assets/images/splash.png",
+        //     ),
+        //     fit: BoxFit.fill,
+        //   ),
+        // ),
         child: SlideableWidget(
             child: builldSlidecntent(context: context),
             onSlided: () {
@@ -172,124 +173,143 @@ class _SplashScreenState extends State<SplashScreen>
     return AnimatedBuilder(
         animation: _controller.view,
         builder: (context, child) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          return Stack(
+            alignment: Alignment.bottomCenter,
             children: [
-              Flexible(
-                fit: FlexFit.tight,
-                child: spacer(),
-              ),
-              SizedBox(
-                height: 60.h,
-              ),
-              Flexible(
-                fit: FlexFit.tight,
-                // flex: 03,
-                child: Container(
-                  // height: size.height.h * 0.33,
+              Positioned(
+                  left: 0,
+                  right: 0,
+                  top: isTablet() ? -450 : -100,
                   child: Transform(
-                    transform: Matrix4.translationValues(
-                        animateleft.value * size.height / 2, 0.0, 0.0),
-                    child: Image.asset(
-                      "assets/svg/splashtitle.png",
-                      width: size.width.h * 0.50,
-                    ),
-                    // Text(
-                  
-                    //   style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                    //       fontWeight: FontWeight.bold,
-                    //       fontFamily: "Hussar Nova",
-                    //       color: Colors.white,
-                    //       fontSize: 16.0.sp),
-                    // )
+                      transform: Matrix4.translationValues(
+                          0.0, animateright.value * size.height / 2, 0.0),
+                      child: Image.asset(
+                        'assets/newassets/spbg.png',
+                        color: isDarkThemeEnabled(context)
+                            ? Colors.black.withOpacity(0.4)
+                            : null,
+                      ))),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Flexible(
+                    fit: FlexFit.tight,
+                    child: spacer(),
                   ),
-                ),
-              ),
-              SizedBox(
-                height: 50.h,
-              ),
-              Flexible(
-                fit: FlexFit.tight,
-                // flex: 05,
-                child: Transform(
-                  transform: Matrix4.translationValues(
-                      animateright.value * size.height / 2, 0.0, 0.0),
-                  child: Container(
-                    margin: EdgeInsets.only(top: 25.h),
-                    // height: size.height.h * 0.34,
-                    // width: size.height.h * 0.34,
-                    child: Image.asset(
-                      "assets/svg/splashlogo.png",
-                      width: size.height.h * 0.34,
+                  SizedBox(
+                    height: 60.h,
+                  ),
+                  SizedBox(
+                    height: 50.h,
+                  ),
+                  Transform(
+                    transform: Matrix4.translationValues(
+                        animateright.value * size.height / 2, 0.0, 0.0),
+                    child: Container(
+                      margin: EdgeInsets.only(top: 25.h),
+                      padding: EdgeInsets.only(left: 25),
+                      // height: size.height.h * 0.34,
+                      // width: size.height.h * 0.34,
+                      child: Image.asset(
+                        "assets/svg/splashlogo.png",
+                        width: isTablet()
+                            ? size.height.h * 0.14
+                            : size.height.h * 0.20,
+                      ),
                     ),
                   ),
-                ),
-              ),
-              Flexible(
-                fit: FlexFit.tight,
-                child: spacer(),
-              ),
-              Flexible(
-                fit: FlexFit.tight,
-                // flex: 04,
-                child: Container(
-                  // height: size.height * 0.33,
-                  child: Transform(
-                    transform: Matrix4.translationValues(
-                        0.0, animateup.value * size.height / 2, 0.0),
-                    child: AnimatedBuilder(
-                        animation: _repeatcontroller.view,
-                        builder: (context, child) {
-                          return Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              FittedBox(
-                                child: Transform(
-                                  transform: Matrix4.translationValues(
-                                      0.0, animateuprepeat.value * 10, 0.0),
-                                  child: Container(
-                                    height: 32.h,
-                                    width: 32.h,
-                                    decoration: BoxDecoration(
-                                        gradient: LinearGradient(colors: [
-                                          Color(0xffFFFFFF),
-                                          Color(0xffFFFFFF),
-                                          // Color.fromARGB(255, 128, 36, 121),
-                                          // Color(0xffAC30A3),
-                                        ]),
-                                        shape: BoxShape.circle),
-                                    child: Icon(Icons.arrow_upward,
-                                        color: Color(0xff1164AA)),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: 25.h,
-                              ),
-                              Transform(
-                                transform: Matrix4.translationValues(
-                                    0.0, _intervaltween.value * 10, 0.0),
-                                child: FittedBox(
-                                  child: Text(
-                                    "Swipe up to Login",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyText1!
-                                        .copyWith(
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.white),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                        }),
+                  Container(
+                    // height: size.height.h * 0.33,
+                    child: Transform(
+                      transform: Matrix4.translationValues(
+                          animateleft.value * size.height / 2, 0.0, 0.0),
+                      child: Image.asset(
+                        "assets/svg/splashtitle.png",
+                        width: isTablet()
+                            ? size.width.h * 0.20
+                            : size.width.h * 0.40,
+                        color: Color(0xff1F5FA2),
+                      ),
+                      // Text(
+
+                      //   style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                      //       fontWeight: FontWeight.bold,
+                      //       fontFamily: "Hussar Nova",
+                      //       color: Colors.white,
+                      //       fontSize: 16.0.sp),
+                      // )
+                    ),
                   ),
-                ),
-              ),
-              Flexible(
-                fit: FlexFit.tight,
-                child: spacer(),
+                  Flexible(
+                    fit: FlexFit.tight,
+                    child: spacer(),
+                  ),
+                  Flexible(
+                    fit: FlexFit.tight,
+                    // flex: 04,
+                    child: Container(
+                      // height: size.height * 0.33,
+                      child: Transform(
+                        transform: Matrix4.translationValues(
+                            0.0, animateup.value * size.height / 2, 0.0),
+                        child: AnimatedBuilder(
+                            animation: _repeatcontroller.view,
+                            builder: (context, child) {
+                              return Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  FittedBox(
+                                    child: Transform(
+                                      transform: Matrix4.translationValues(
+                                          0.0, animateuprepeat.value * 10, 0.0),
+                                      child: Container(
+                                        height: 32.h,
+                                        width: 32.h,
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: Color(0xff1164AA),
+                                            ),
+                                            gradient: LinearGradient(colors: [
+                                              Color(0xffFFFFFF),
+                                              Color(0xffFFFFFF),
+                                              // Color.fromARGB(255, 128, 36, 121),
+                                              // Color(0xffAC30A3),
+                                            ]),
+                                            shape: BoxShape.circle),
+                                        child: Icon(Icons.arrow_upward,
+                                            color: Color(0xff1164AA)),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 25.h,
+                                  ),
+                                  Transform(
+                                    transform: Matrix4.translationValues(
+                                        0.0, _intervaltween.value * 10, 0.0),
+                                    child: FittedBox(
+                                      child: Text(
+                                        "Swipe up to Login",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyText1!
+                                            .copyWith(
+                                                fontWeight: FontWeight.w500,
+                                                color: Color(0xff1164AA)),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            }),
+                      ),
+                    ),
+                  ),
+                  Flexible(
+                    fit: FlexFit.tight,
+                    child: spacer(),
+                  ),
+                ],
               ),
             ],
           );

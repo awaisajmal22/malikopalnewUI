@@ -17,6 +17,8 @@ import 'package:malikopal/utils/shared_pref.dart';
 import 'package:month_year_picker/month_year_picker.dart';
 
 import '../../../utils/utility.dart';
+import '../../dashboard/custom.widgets/custom_widgets.dart';
+import '../../dashboard/dashboard.screens/hidecapital.screen.dart';
 
 bool isTablet() {
   final data = MediaQueryData.fromWindow(WidgetsBinding.instance.window);
@@ -1039,13 +1041,14 @@ class _CustomHorizontalListViewState extends State<CustomHorizontalListView> {
 }
 
 class CustomTopBar extends StatelessWidget {
-  const CustomTopBar(
+   CustomTopBar(
       {Key? key,
       this.backButtonColor = Colors.white,
       required this.topbartitle,
       this.action,
       this.fontSize = 20,
       this.onPressed,
+      this.isNavBar = false,
       this.isBottomSheet = false,
       this.mainAlignment = MainAxisAlignment.spaceBetween,
       this.isProfileUpdate})
@@ -1053,6 +1056,7 @@ class CustomTopBar extends StatelessWidget {
   final Color backButtonColor;
   final String topbartitle;
   final Widget? action;
+  bool isNavBar = false;
   final bool? isProfileUpdate;
   final double fontSize;
   final bool isBottomSheet;
@@ -1072,12 +1076,24 @@ class CustomTopBar extends StatelessWidget {
                   child: Padding(
                     padding: const EdgeInsets.only(top: 0.0),
                     child: InkWell(
-                      onTap: isBottomSheet == true
-                          ? onPressed
-                          : () {
+                      onTap: (){
+                      if(isBottomSheet == true){
+onPressed;
+                      }else if(isNavBar == true){
+                        currentScreen.add(screen.home);
+
+              Navigator.pushNamed(context, HideCapitalView.routeName)
+                  .then((value) {
+                currentScreen.add(screen.home);
+              });
+
+                      }
+                      else
+                          {
                               ScaffoldMessenger.of(context)
                                   .hideCurrentSnackBar();
                               Navigator.pop(context);
+                            }
                             },
                       child: Container(
                         width: 40,

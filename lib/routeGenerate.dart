@@ -13,6 +13,7 @@ import 'package:malikopal/screens/loginprocess/loginscreens/splash_screen.dart';
 import 'package:malikopal/screens/loginprocess/loginscreens/verification_method.dart';
 import 'package:malikopal/screens/setting/change_password.dart';
 import 'package:malikopal/screens/setting/message_screen.dart';
+import 'package:malikopal/screens/setting/profile_screen.dart';
 import 'package:malikopal/screens/setting/setting.dart';
 
 class NoAnimationPageRoute<T> extends MaterialPageRoute<T> {
@@ -63,6 +64,12 @@ class RouteGenerator {
         return MaterialPageRoute(
           builder: (context) {
             return ClosingPaymentView();
+          },
+        );
+      case (ProfileView.routeName):
+        return MaterialPageRoute(
+          builder: (context) {
+            return ProfileView();
           },
         );
       case (DashBoardView.routeName):

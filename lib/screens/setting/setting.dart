@@ -83,12 +83,11 @@ class _SettingScreenState extends State<SettingScreen> {
     debugPrint("$size");
     return WillPopScope(
       onWillPop: () async {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => HideCapitalView(),
-          ),
-        );
+        currentScreen.add(screen.home);
+
+        Navigator.pushNamed(context, HideCapitalView.routeName).then((value) {
+          currentScreen.add(screen.home);
+        });
         return true;
       },
       child: Scaffold(
@@ -111,6 +110,7 @@ class _SettingScreenState extends State<SettingScreen> {
                 height: 40.h,
               ),
               CustomTopBar(
+                isNavBar: true,
                 topbartitle: 'Settings',
               ),
               Expanded(
